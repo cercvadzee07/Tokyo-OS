@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ka" data-theme="tokyo">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tokyo OS — by NEONDEV</title>
+    <link rel="stylesheet" href="theme.css" />
+  </head>
+  <body>
+    <!-- Custom Cyber Cursor -->
+    <div id="cursor-dot" class="cyber-cursor-dot"></div>
+    <div id="cursor-ring" class="cyber-cursor-ring"></div>
+
+    <!-- CRT Screen Filter -->
+    <div class="crt-overlay"></div>
+
+    <!-- Matrix Background Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Desktop Icons Grid -->
+    <main class="desktop-workspace" id="desktop">
+      <div class="desktop-icon" data-app="terminal">
+        <div class="icon-glyph terminal-glyph">&gt;_</div>
+        <span class="icon-label" data-i18n="app_terminal">ტერმინალი</span>
+      </div>
+      <div class="desktop-icon" data-app="browser">
+        <div class="icon-glyph browser-glyph">🌐</div>
+        <span class="icon-label" data-i18n="app_browser">კიბერ ბრაუზერი</span>
+      </div>
+      <div class="desktop-icon" data-app="monitor">
+        <div class="icon-glyph monitor-glyph">📊</div>
+        <span class="icon-label" data-i18n="app_monitor">მონიტორი</span>
+      </div>
+      <div class="desktop-icon" data-app="explorer">
+        <div class="icon-glyph explorer-glyph">📁</div>
+        <span class="icon-label" data-i18n="app_explorer">ფაილები</span>
+      </div>
+      <div class="desktop-icon" data-app="synth">
+        <div class="icon-glyph synth-glyph">🎛️</div>
+        <span class="icon-label" data-i18n="app_synth">ლო-ფაი სინთი</span>
+      </div>
+    </main>
+
+    <!-- Window Containers Layer -->
+    <div id="window-layer">
+      <!-- Terminal Window -->
+      <div
+        class="cyber-window"
+        id="win-terminal"
+        style="top: 80px; left: 100px; width: 620px; height: 420px"
+      >
+        <div class="window-header">
+          <div class="window-title">
+            <span class="window-icon">&gt;_</span>
+            <span class="window-title-text" data-i18n="app_terminal"
+              >ტერმინალი</span
+            >
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-min" title="Minimize">−</button>
+            <button class="win-btn win-max" title="Maximize">□</button>
+            <button class="win-btn win-close" title="Close">✕</button>
+          </div>
+        </div>
+        <div class="window-body terminal-body">
+          <div class="terminal-output" id="terminal-output"></div>
+          <div class="terminal-input-row">
+            <span class="terminal-prompt" id="terminal-prompt"
+              >guest@tokyo-night:~$</span
+            >
+            <input
+              type="text"
+              id="terminal-input"
+              autocomplete="off"
+              spellcheck="false"
+              autofocus
+            />
+          </div>
+        </div>
+        <div class="win-resizer"></div>
+      </div>
+
+      <!-- Cyber Browser Window -->
+      <div
+        class="cyber-window hidden"
+        id="win-browser"
+        style="top: 100px; left: 160px; width: 680px; height: 450px"
+      >
+        <div class="window-header">
+          <div class="window-title">
+            <span class="window-icon">🌐</span>
+            <span class="window-title-text" data-i18n="app_browser"
+              >კიბერ ბრაუზერი</span
+            >
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-min">−</button>
+            <button class="win-btn win-max">□</button>
+            <button class="win-btn win-close">✕</button>
+          </div>
+        </div>
+        <div class="window-body browser-body">
+          <div class="browser-toolbar">
+            <button class="browser-nav-btn">&larr;</button>
+            <button class="browser-nav-btn">&rarr;</button>
+            <div class="browser-url-bar">
+              <span class="ssl-badge">🔒 SECURE</span>
+              <input
+                type="text"
+                class="browser-input"
+                value="https://neondev.net/portfolio"
+                readonly
+              />
+            </div>
+            <button class="browser-nav-btn">↻</button>
+          </div>
+          <div class="browser-viewport">
+            <div class="mock-webpage">
+              <div class="mock-hero">
+                <h1 class="glitch-text">&lt;NEON<span>DEV</span>&gt;</h1>
+                <p class="mock-sub" data-i18n="browser_hero_sub">
+                  Senior Creative Frontend Engineer // Cyber Architect
+                </p>
+              </div>
+              <div class="mock-cards">
+                <div class="mock-card">
+                  <h4 data-i18n="card_1_title">ტოკიო OS</h4>
+                  <p data-i18n="card_1_desc">
+                    Vanilla JS, CSS3, Web Audio API-ზე აგებული კიბერ ოპერაციული
+                    სისტემა.
+                  </p>
+                </div>
+                <div class="mock-card">
+                  <h4 data-i18n="card_2_title">აუდიო სინთი</h4>
+                  <p data-i18n="card_2_desc">
+                    ტალღოვანი სიხშირეების გენერატორი რეალურ დროში, გარე ფაილების
+                    გარეშე.
+                  </p>
+                </div>
+                <div class="mock-card">
+                  <h4 data-i18n="card_3_title">ლოკალიზაცია</h4>
+                  <p data-i18n="card_3_desc">
+                    სრული ორენოვანი გარემო (ქართული და ინგლისური) დინამიკური
+                    გადართვით.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="win-resizer"></div>
+      </div>
+
+      <!-- System Monitor Window -->
+      <div
+        class="cyber-window hidden"
+        id="win-monitor"
+        style="top: 120px; left: 220px; width: 560px; height: 420px"
+      >
+        <div class="window-header">
+          <div class="window-title">
+            <span class="window-icon">📊</span>
+            <span class="window-title-text" data-i18n="app_monitor"
+              >მონიტორი</span
+            >
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-min">−</button>
+            <button class="win-btn win-max">□</button>
+            <button class="win-btn win-close">✕</button>
+          </div>
+        </div>
+        <div class="window-body monitor-body">
+          <div class="metric-block">
+            <div class="metric-info">
+              <span data-i18n="metric_cpu">პროცესორის დატვირთვა (CPU)</span>
+              <span id="cpu-val" class="metric-val">34%</span>
+            </div>
+            <canvas
+              id="cpu-chart"
+              class="chart-canvas"
+              width="500"
+              height="60"
+            ></canvas>
+          </div>
+          <div class="metric-block">
+            <div class="metric-info">
+              <span data-i18n="metric_ram">ოპერატიული მეხსიერება (RAM)</span>
+              <span id="ram-val" class="metric-val">4.2 / 16 GB</span>
+            </div>
+            <canvas
+              id="ram-chart"
+              class="chart-canvas"
+              width="500"
+              height="60"
+            ></canvas>
+          </div>
+          <div class="metric-block">
+            <div class="metric-info">
+              <span data-i18n="metric_net">ქსელური ტელემეტრია (NET)</span>
+              <span id="net-val" class="metric-val">128 KB/s</span>
+            </div>
+            <canvas
+              id="net-chart"
+              class="chart-canvas"
+              width="500"
+              height="60"
+            ></canvas>
+          </div>
+        </div>
+        <div class="win-resizer"></div>
+      </div>
+
+      <!-- File Explorer Window -->
+      <div
+        class="cyber-window hidden"
+        id="win-explorer"
+        style="top: 140px; left: 280px; width: 620px; height: 380px"
+      >
+        <div class="window-header">
+          <div class="window-title">
+            <span class="window-icon">📁</span>
+            <span class="window-title-text" data-i18n="app_explorer"
+              >ფაილები</span
+            >
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-min">−</button>
+            <button class="win-btn win-max">□</button>
+            <button class="win-btn win-close">✕</button>
+          </div>
+        </div>
+        <div class="window-body explorer-body">
+          <div class="explorer-sidebar">
+            <div class="folder-item active">📁 /root/neon</div>
+            <div class="folder-item">📂 /system/logs</div>
+            <div class="folder-item">📂 /portfolio</div>
+          </div>
+          <div class="explorer-main">
+            <div class="file-list" id="file-list"></div>
+            <div class="file-preview" id="file-preview">
+              <div class="preview-header" id="preview-filename">readme.txt</div>
+              <pre class="preview-content" id="preview-text"></pre>
+            </div>
+          </div>
+        </div>
+        <div class="win-resizer"></div>
+      </div>
+
+      <!-- Synth Audio App Window -->
+      <div
+        class="cyber-window hidden"
+        id="win-synth"
+        style="top: 160px; left: 340px; width: 480px; height: 360px"
+      >
+        <div class="window-header">
+          <div class="window-title">
+            <span class="window-icon">🎛️</span>
+            <span class="window-title-text" data-i18n="app_synth"
+              >ლო-ფაი სინთი</span
+            >
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-min">−</button>
+            <button class="win-btn win-max">□</button>
+            <button class="win-btn win-close">✕</button>
+          </div>
+        </div>
+        <div class="window-body synth-body">
+          <div class="synth-top">
+            <button id="synth-toggle" class="cyber-btn" data-i18n="synth_play">
+              ▶ ჩართვა
+            </button>
+            <span class="chord-display" id="chord-display">CHORD: OFF</span>
+          </div>
+          <div class="visualizer-bars">
+            <div class="eq-bar" id="bar-1"></div>
+            <div class="eq-bar" id="bar-2"></div>
+            <div class="eq-bar" id="bar-3"></div>
+            <div class="eq-bar" id="bar-4"></div>
+          </div>
+          <div class="synth-info">
+            <p data-i18n="synth_desc">
+              პროცედურული ატმოსფერული აკორდები (Cmaj7 &bull; Am7 &bull; Dm7
+              &bull; G7) Web Audio ოსცილატორებით.
+            </p>
+          </div>
+        </div>
+        <div class="win-resizer"></div>
+      </div>
+    </div>
+
+    <!-- Start Menu Popup -->
+    <div class="start-menu hidden" id="start-menu">
+      <div class="start-menu-header">
+        <span class="neon-brand">&lt;NEON<span>DEV</span>&gt;</span>
+        <span class="os-version">v2.0.4-PROD</span>
+      </div>
+      <div class="start-menu-items">
+        <div class="menu-item" data-app="terminal">
+          <span>&gt;_</span> <span data-i18n="app_terminal">ტერმინალი</span>
+        </div>
+        <div class="menu-item" data-app="browser">
+          <span>🌐</span> <span data-i18n="app_browser">კიბერ ბრაუზერი</span>
+        </div>
+        <div class="menu-item" data-app="monitor">
+          <span>📊</span> <span data-i18n="app_monitor">მონიტორი</span>
+        </div>
+        <div class="menu-item" data-app="explorer">
+          <span>📁</span> <span data-i18n="app_explorer">ფაილები</span>
+        </div>
+        <div class="menu-item" data-app="synth">
+          <span>🎛️</span> <span data-i18n="app_synth">ლო-ფაი სინთი</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cyber Taskbar HUD -->
+    <footer class="cyber-taskbar">
+      <div class="taskbar-left">
+        <button class="start-btn" id="start-btn">
+          <span class="neon-brand">&lt;NEON<span>DEV</span>&gt;</span>
+        </button>
+        <div class="taskbar-running-apps" id="running-apps"></div>
+      </div>
+
+      <div class="taskbar-right">
+        <!-- Theme Switcher HUD -->
+        <div class="hud-item theme-switcher">
+          <button class="hud-btn" id="theme-btn" title="Toggle Neon Theme">
+            🎨 <span id="theme-name">TOKYO</span>
+          </button>
+        </div>
+
+        <!-- Bilingual Toggle -->
+        <div class="hud-item lang-switcher">
+          <button class="hud-btn" id="lang-btn" title="Switch Language">
+            🌐 <span id="lang-label">GEO</span>
+          </button>
+        </div>
+
+        <!-- Audio Mute Switch -->
+        <div class="hud-item sfx-switcher">
+          <button class="hud-btn" id="sfx-btn" title="SFX Toggle">🔊</button>
+        </div>
+
+        <!-- Digital Real-Time Clock -->
+        <div class="hud-item clock-display" id="hud-clock">00:00:00</div>
+      </div>
+    </footer>
+
+    <script src="kernel.js"></script>
+  </body>
+</html>
