@@ -36,17 +36,27 @@ const I18N = {
     synth_stop: "⏹ გაჩერება",
     synth_desc:
       "პროცედურული ატმოსფერული აკორდები (Cmaj7 • Am7 • Dm7 • G7) Web Audio ოსცილატორებით.",
-    welcome_term:
-      "მოგესალმებათ Tokyo OS [ვერსია 2.0.4]\nბრძანებების სანახავად აკრიფეთ 'help' ან 'დახმარება'.\n",
-    help_text: `ხელმისაწვდომი ბრძანებები:
-  help / დახმარება    - ბრძანებების სია
-  neofetch            - სისტემის ინფორმაცია
-  matrix              - მატრიცის ეფექტის გადართვა
-  theme [tokyo|cyberpunk|matrix] - თემის შეცვლა
-  lang [geo|eng]      - ენის შეცვლა
-  clear               - ეკრანის გასუფთავება
-  date                - მიმდინარე დრო
-  reboot              - სისტემის გადატვირთვა`,
+    // Linux terminal (v86)
+    linux_title: "ნამდვილი Linux შენს ბრაუზერში",
+    linux_desc:
+      "x86 კომპიუტერის ემულატორი (v86) ტვირთავს Linux 6.8-ს პირდაპირ ამ გვერდზე. ის მხოლოდ შენს ბრაუზერში მუშაობს — არაფერს წაშლი და არაფერს გააფუჭებ, გვერდის განახლება ყველაფერს თავიდან იწყებს.",
+    linux_boot: "▶ Linux-ის ჩართვა",
+    linux_size: "ერთჯერადი ჩამოტვირთვა ≈ 12 MB",
+    linux_loading: "იტვირთება",
+    linux_booting: "ბირთვი იტვირთება… (10–30 წამი)",
+    linux_failed: "ჩატვირთვა ვერ მოხერხდა. შეამოწმე ინტერნეტი და სცადე თავიდან.",
+    linux_hint: "სცადე: ls /  ·  uname -a  ·  top  ·  vi hello.txt  ·  cat /proc/cpuinfo",
+    // Browser
+    browser_new_tab: "ახალი ჩანართი",
+    browser_search_ph: "მოძებნე Wikipedia-ზე ან ჩაწერე მისამართი",
+    browser_bookmarks: "სანიშნეები",
+    browser_my_projects: "ჩემი პროექტები",
+    browser_explore: "დაათვალიერე",
+    browser_blocked_title: "ეს საიტი ჩაშენებას კრძალავს",
+    browser_blocked_desc:
+      "ზოგი საიტი (Google, GitHub, Facebook…) არ აძლევს სხვა გვერდს უფლებას, თავისი თავი ფანჯარაში აჩვენოს. გახსენი ახალ ჩანართში.",
+    browser_open_external: "ახალ ჩანართში გახსნა ↗",
+    browser_embed_hint: "თუ გვერდი ცარიელია, საიტი ჩაშენებას კრძალავს →",
   },
   ENG: {
     app_terminal: "Terminal",
@@ -70,17 +80,27 @@ const I18N = {
     synth_stop: "⏹ Stop",
     synth_desc:
       "Procedural ambient chord progressions (Cmaj7 • Am7 • Dm7 • G7) via Web Audio oscillators.",
-    welcome_term:
-      "Welcome to Tokyo OS [Version 2.0.4]\nType 'help' or 'დახმარება' to view available commands.\n",
-    help_text: `Available system commands:
-  help / დახმარება    - Display this command list
-  neofetch            - Show system specifications & badge
-  matrix              - Toggle matrix digital rain speed
-  theme [tokyo|cyberpunk|matrix] - Switch color theme
-  lang [geo|eng]      - Change system language
-  clear               - Clear terminal output
-  date                - Display current timestamp
-  reboot              - Soft reboot the system`,
+    // Linux terminal (v86)
+    linux_title: "Real Linux in your browser",
+    linux_desc:
+      "An x86 PC emulator (v86) boots Linux 6.8 right inside this page. It runs only in your browser — you can't delete or break anything, a page reload starts fresh.",
+    linux_boot: "▶ Boot Linux",
+    linux_size: "One-time download ≈ 12 MB",
+    linux_loading: "Downloading",
+    linux_booting: "Booting kernel… (10–30 s)",
+    linux_failed: "Boot failed. Check your connection and try again.",
+    linux_hint: "Try: ls /  ·  uname -a  ·  top  ·  vi hello.txt  ·  cat /proc/cpuinfo",
+    // Browser
+    browser_new_tab: "New Tab",
+    browser_search_ph: "Search Wikipedia or type a URL",
+    browser_bookmarks: "Bookmarks",
+    browser_my_projects: "My Projects",
+    browser_explore: "Explore",
+    browser_blocked_title: "This site refuses to be embedded",
+    browser_blocked_desc:
+      "Some sites (Google, GitHub, Facebook…) don't allow other pages to show them in a frame. Open it in a new tab instead.",
+    browser_open_external: "Open in new tab ↗",
+    browser_embed_hint: "Page blank? The site blocks embedding →",
   },
 };
 
@@ -99,9 +119,21 @@ function applyLanguage(lang) {
     }
   });
 
+  document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-ph");
+    if (I18N[lang] && I18N[lang][key]) el.placeholder = I18N[lang][key];
+  });
+
   if (window.windowManager) {
     window.windowManager.updateTaskbar();
   }
+  // apps with dynamic content (browser, linux terminal) re-render on this
+  document.dispatchEvent(new CustomEvent("tokyo:lang", { detail: lang }));
+}
+
+/** translation lookup for dynamic UI: t("key") → current language, falls back to ENG */
+function t(key) {
+  return (I18N[currentLang] && I18N[currentLang][key]) || I18N.ENG[key] || key;
 }
 
 /* ==========================================================================
@@ -292,6 +324,13 @@ class WindowManager {
     this.windows = {};
     this.topZ = 100;
     this.initWindows();
+    // windows that are open at page load also need to fit a phone screen
+    Object.keys(this.windows).forEach((id) => {
+      const el = this.windows[id].element;
+      if (el.classList.contains("hidden")) return;
+      if (this.isCompact) this.toggleMaximize(id, true);
+      else this.fitToViewport(el);
+    });
   }
 
   initWindows() {
@@ -305,6 +344,10 @@ class WindowManager {
 
       const header = win.querySelector(".window-header");
       this.makeDraggable(win, header);
+      header.addEventListener("dblclick", (e) => {
+        if (e.target.closest(".window-controls")) return;
+        this.toggleMaximize(id);
+      });
 
       const resizer = win.querySelector(".win-resizer");
       if (resizer) this.makeResizable(win, resizer);
@@ -333,8 +376,17 @@ class WindowManager {
         });
       }
 
-      win.addEventListener("mousedown", () => this.bringToFront(id));
+      win.addEventListener("pointerdown", () => this.bringToFront(id));
     });
+  }
+
+  /** small screens: every window opens full-screen */
+  get isCompact() {
+    return window.matchMedia("(max-width: 700px)").matches;
+  }
+
+  emit(type, id) {
+    document.dispatchEvent(new CustomEvent(`window:${type}`, { detail: id }));
   }
 
   bringToFront(id) {
@@ -353,8 +405,12 @@ class WindowManager {
     const winObj = this.windows[id];
     if (!winObj) return;
     audio.playWindowOpen();
-    winObj.element.classList.remove("hidden");
+    winObj.element.classList.remove("hidden", "minimized");
+    if (this.isCompact && !winObj.isMaximized) this.toggleMaximize(id, true);
+    else if (!winObj.isMaximized) this.fitToViewport(winObj.element);
     this.bringToFront(id);
+    // fired on every launch (desktop icon / start menu), even if the window was already open
+    this.emit("opened", id);
   }
 
   closeWindow(id) {
@@ -362,21 +418,44 @@ class WindowManager {
     if (!winObj) return;
     audio.playClick();
     winObj.element.classList.add("hidden");
+    winObj.element.classList.remove("minimized", "active-window");
     this.updateTaskbar();
+    this.emit("closed", id);
   }
 
+  // minimized windows stay "running": they keep their taskbar button and state
   minimizeWindow(id) {
     const winObj = this.windows[id];
     if (!winObj) return;
     audio.playClick();
-    winObj.element.classList.add("hidden");
+    winObj.element.classList.add("minimized");
+    winObj.element.classList.remove("active-window");
     this.updateTaskbar();
   }
 
-  toggleMaximize(id) {
+  /** keeps a window fully on screen (its default size may be larger than a small laptop screen) */
+  fitToViewport(win) {
+    const maxW = window.innerWidth - 24;
+    const maxH = window.innerHeight - 46 - 24; // minus taskbar
+    if (win.offsetWidth > maxW) win.style.width = `${maxW}px`;
+    if (win.offsetHeight > maxH) win.style.height = `${maxH}px`;
+    if (win.offsetLeft + win.offsetWidth > window.innerWidth) win.style.left = `${Math.max(12, window.innerWidth - win.offsetWidth - 12)}px`;
+    if (win.offsetTop + win.offsetHeight > maxH + 24) win.style.top = `${Math.max(12, maxH + 12 - win.offsetHeight)}px`;
+  }
+
+  restoreWindow(id) {
     const winObj = this.windows[id];
     if (!winObj) return;
-    audio.playClick();
+    winObj.element.classList.remove("minimized");
+    this.bringToFront(id);
+  }
+
+  toggleMaximize(id, silent = false) {
+    const winObj = this.windows[id];
+    if (!winObj) return;
+    if (!silent) audio.playClick();
+    // on phones windows always stay full-screen
+    if (winObj.isMaximized && this.isCompact) return;
     if (winObj.isMaximized) {
       winObj.element.classList.remove("maximized");
       if (winObj.prevBounds) {
@@ -398,75 +477,57 @@ class WindowManager {
     }
   }
 
-  makeDraggable(win, header) {
-    let isDragging = false;
-    let startX, startY, initX, initY;
+  /**
+   * Pointer-based drag (mouse, touch and pen). While dragging, body gets
+   * .wm-dragging so iframes (browser pages) can't swallow the pointer.
+   */
+  trackPointer(e, onMove) {
+    e.preventDefault();
+    document.body.classList.add("wm-dragging");
+    const move = (ev) => onMove(ev);
+    const up = () => {
+      document.body.classList.remove("wm-dragging");
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerup", up);
+      document.removeEventListener("pointercancel", up);
+    };
+    document.addEventListener("pointermove", move);
+    document.addEventListener("pointerup", up);
+    document.addEventListener("pointercancel", up);
+  }
 
-    header.addEventListener("mousedown", (e) => {
+  makeDraggable(win, header) {
+    header.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0 || e.target.closest(".window-controls")) return;
       if (win.classList.contains("maximized")) return;
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      initX = win.offsetLeft;
-      initY = win.offsetTop;
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const initX = win.offsetLeft;
+      const initY = win.offsetTop;
       this.bringToFront(win.id.replace("win-", ""));
 
-      const onMouseMove = (moveEvent) => {
-        if (!isDragging) return;
-        const dx = moveEvent.clientX - startX;
-        const dy = moveEvent.clientY - startY;
-        const boundedX = Math.max(
-          0,
-          Math.min(window.innerWidth - 60, initX + dx),
-        );
-        const boundedY = Math.max(
-          0,
-          Math.min(window.innerHeight - 80, initY + dy),
-        );
-        win.style.left = `${boundedX}px`;
-        win.style.top = `${boundedY}px`;
-      };
-
-      const onMouseUp = () => {
-        isDragging = false;
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-      };
-
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      this.trackPointer(e, (ev) => {
+        const x = Math.max(-win.offsetWidth + 80, Math.min(window.innerWidth - 80, initX + ev.clientX - startX));
+        const y = Math.max(0, Math.min(window.innerHeight - 90, initY + ev.clientY - startY));
+        win.style.left = `${x}px`;
+        win.style.top = `${y}px`;
+      });
     });
   }
 
   makeResizable(win, resizer) {
-    let isResizing = false;
-    let startX, startY, initW, initH;
-
-    resizer.addEventListener("mousedown", (e) => {
+    resizer.addEventListener("pointerdown", (e) => {
       e.stopPropagation();
-      isResizing = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      initW = win.offsetWidth;
-      initH = win.offsetHeight;
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const initW = win.offsetWidth;
+      const initH = win.offsetHeight;
       this.bringToFront(win.id.replace("win-", ""));
 
-      const onMouseMove = (moveEvent) => {
-        if (!isResizing) return;
-        const w = Math.max(320, initW + (moveEvent.clientX - startX));
-        const h = Math.max(200, initH + (moveEvent.clientY - startY));
-        win.style.width = `${w}px`;
-        win.style.height = `${h}px`;
-      };
-
-      const onMouseUp = () => {
-        isResizing = false;
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-      };
-
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      this.trackPointer(e, (ev) => {
+        win.style.width = `${Math.max(340, initW + ev.clientX - startX)}px`;
+        win.style.height = `${Math.max(220, initH + ev.clientY - startY)}px`;
+      });
     });
   }
 
@@ -485,12 +546,13 @@ class WindowManager {
 
     Object.keys(this.windows).forEach((appKey) => {
       const win = this.windows[appKey].element;
-      const isVisible = !win.classList.contains("hidden");
-      const isActive = win.classList.contains("active-window");
+      const isOpen = !win.classList.contains("hidden");
+      const isMinimized = win.classList.contains("minimized");
+      const isActive = !isMinimized && win.classList.contains("active-window");
 
-      if (isVisible) {
+      if (isOpen) {
         const task = document.createElement("button");
-        task.className = `task-item ${isActive ? "active" : ""}`;
+        task.className = `task-item ${isActive ? "active" : ""} ${isMinimized ? "minimized" : ""}`;
 
         const appData = appIcons[appKey] || { icon: "⚙️", color: "#fff" };
         const label =
@@ -506,7 +568,7 @@ class WindowManager {
           if (isActive) {
             this.minimizeWindow(appKey);
           } else {
-            this.bringToFront(appKey);
+            this.restoreWindow(appKey);
           }
         });
 
@@ -529,98 +591,7 @@ class WindowManager {
 /* ==========================================================================
    5. NATIVE CYBER APPS
    ========================================================================== */
-class TerminalApp {
-  constructor() {
-    this.output = document.getElementById("terminal-output");
-    this.input = document.getElementById("terminal-input");
-    this.init();
-  }
-
-  init() {
-    if (!this.input || !this.output) return;
-    this.print(I18N[currentLang].welcome_term, "output-sys");
-
-    this.input.addEventListener("keydown", (e) => {
-      audio.playKeypress(e.key.charCodeAt(0));
-      if (e.key === "Enter") {
-        const val = this.input.value.trim();
-        this.input.value = "";
-        this.execute(val);
-      }
-    });
-  }
-
-  print(text, className = "output-info") {
-    const line = document.createElement("div");
-    line.className = `terminal-line ${className}`;
-    line.textContent = text;
-    this.output.appendChild(line);
-    this.output.scrollTop = this.output.scrollHeight;
-  }
-
-  execute(raw) {
-    if (!raw) return;
-    this.print(`guest@tokyo-night:~$ ${raw}`, "output-info");
-    const args = raw.split(" ");
-    const cmd = args[0].toLowerCase();
-
-    switch (cmd) {
-      case "help":
-      case "დახმარება":
-        this.print(I18N[currentLang].help_text, "output-sys");
-        break;
-      case "clear":
-        this.output.innerHTML = "";
-        break;
-      case "date":
-        this.print(new Date().toString(), "output-sys");
-        break;
-      case "neofetch":
-        this.print(
-          `
-    ███╗   ██╗███████╗ ██████╗ ███╗   ██╗
-    ████╗  ██║██╔════╝██╔═══██╗████╗  ██║
-    ██╔██╗ ██║█████╗  ██║   ██║██╔██╗ ██║
-    ██║╚██╗██║██╔══╝  ██║   ██║██║╚██╗██║
-    ██║ ╚████║███████╗╚██████╔╝██║ ╚████║
-    OS: Tokyo OS v2.0.4 x86_64
-    Host: NEONDEV Station
-    Kernel: 5.19.0-cyber
-        `,
-          "output-ascii",
-        );
-        break;
-      case "theme":
-        if (["tokyo", "cyberpunk", "matrix"].includes(args[1])) {
-          setTheme(args[1]);
-          this.print(`Theme switched to ${args[1]}`, "output-sys");
-        } else {
-          this.print("Usage: theme [tokyo | cyberpunk | matrix]", "output-err");
-        }
-        break;
-      case "lang":
-        if (["geo", "eng"].includes(args[1])) {
-          applyLanguage(args[1].toUpperCase());
-          this.print(
-            `Language switched to ${args[1].toUpperCase()}`,
-            "output-sys",
-          );
-        } else {
-          this.print("Usage: lang [geo | eng]", "output-err");
-        }
-        break;
-      case "reboot":
-        this.print("Rebooting Tokyo OS...", "output-err");
-        setTimeout(() => location.reload(), 800);
-        break;
-      default:
-        this.print(
-          `Unknown command: '${cmd}'. Type 'help' for commands.`,
-          "output-err",
-        );
-    }
-  }
-}
+// The terminal is a real Linux VM now — see linux.js (LinuxTerminalApp).
 
 class SystemMonitorApp {
   constructor() {
@@ -947,7 +918,6 @@ document.querySelectorAll("[data-app]").forEach((launcher) => {
 // Bootstrap Instances
 window.windowManager = new WindowManager();
 window.matrix = new MatrixEngine("matrix-canvas");
-window.terminalApp = new TerminalApp();
 window.systemMonitorApp = new SystemMonitorApp();
 window.fileExplorerApp = new FileExplorerApp();
 window.synthApp = new SynthApp();

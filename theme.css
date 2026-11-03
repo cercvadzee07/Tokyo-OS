@@ -888,3 +888,485 @@ body {
   color: #ffffff !important;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
+
+/* ==========================================================================
+   WINDOW MANAGER ADDITIONS
+   ========================================================================== */
+.cyber-window.minimized {
+  display: none !important;
+}
+
+html {
+  overflow: hidden;
+}
+
+#window-layer {
+  overflow: hidden;
+  z-index: 2; /* above desktop icons (z-index 1), even before a window is focused */
+}
+
+.window-header,
+.win-resizer {
+  touch-action: none;
+}
+
+/* while a window is dragged/resized, iframes must not swallow the pointer */
+body.wm-dragging iframe {
+  pointer-events: none;
+}
+
+.task-item.minimized {
+  opacity: 0.55;
+}
+
+/* ==========================================================================
+   APP 1: LINUX TERMINAL (v86 + xterm.js)
+   ========================================================================== */
+.linux-body {
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.linux-screen {
+  position: absolute;
+  inset: 0;
+  padding: 8px 4px 4px 10px;
+  background: #0a0b10;
+}
+
+.linux-screen .xterm {
+  height: 100%;
+}
+
+.linux-screen .xterm-viewport {
+  background: transparent !important;
+}
+
+.linux-boot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(125, 207, 255, 0.12), transparent 60%),
+    rgba(10, 11, 16, 0.96);
+  z-index: 2;
+}
+
+.linux-boot.hidden {
+  display: none;
+}
+
+.linux-boot-logo {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--neon-green);
+  text-shadow: 0 0 12px var(--neon-green);
+}
+
+.linux-boot h3 {
+  color: var(--neon-cyan);
+  font-size: 18px;
+}
+
+.linux-boot p {
+  max-width: 460px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-main);
+  opacity: 0.85;
+}
+
+.linux-boot .cyber-btn:disabled {
+  opacity: 0.5;
+}
+
+.linux-size {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.linux-progress {
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.linux-progress.hidden {
+  display: none;
+}
+
+.linux-progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(125, 207, 255, 0.12);
+  overflow: hidden;
+}
+
+.linux-progress-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-violet));
+  transition: width 0.2s ease;
+}
+
+.linux-progress-bar span.indeterminate {
+  animation: linux-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes linux-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.linux-progress-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   APP 2: CYBER BROWSER (tabs + iframes)
+   ========================================================================== */
+.browser-body {
+  overflow: hidden;
+}
+
+.browser-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 6px 8px 0;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border-glow);
+}
+
+.browser-tab-list {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+}
+
+.browser-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 190px;
+  min-width: 90px;
+  padding: 6px 8px 6px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glow);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+}
+
+.browser-tab.active {
+  color: var(--neon-cyan);
+  background: var(--bg-header);
+}
+
+.browser-tab-title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.browser-tab-close,
+.browser-tab-new {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.browser-tab-close:hover,
+.browser-tab-new:hover {
+  color: var(--neon-magenta);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.browser-tab-new {
+  margin-bottom: 4px;
+  font-size: 18px;
+}
+
+.browser-nav-btn {
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.browser-nav-btn:disabled,
+.browser-nav-btn.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.browser-nav-btn:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+.browser-input {
+  color: var(--text-main);
+  user-select: text;
+}
+
+.browser-input::placeholder {
+  color: var(--text-muted);
+}
+
+.ssl-badge {
+  border: none;
+  padding: 0;
+}
+
+.browser-hint {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 3px 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border-glow);
+}
+
+.browser-hint.hidden {
+  display: none;
+}
+
+.browser-hint a {
+  color: var(--neon-cyan);
+}
+
+.browser-loading {
+  height: 2px;
+  background: transparent;
+}
+
+.browser-loading.active {
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  background-size: 50% 100%;
+  animation: browser-load 1s linear infinite;
+}
+
+@keyframes browser-load {
+  from {
+    background-position: -50% 0;
+  }
+  to {
+    background-position: 150% 0;
+  }
+}
+
+.browser-viewport {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+
+.browser-page {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: auto;
+}
+
+.browser-page.active {
+  display: block;
+}
+
+.browser-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+
+.browser-home {
+  min-height: 100%;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.home-logo {
+  font-family: var(--font-mono);
+  font-size: 34px;
+  color: var(--text-main);
+  text-shadow: 0 0 18px var(--border-glow);
+}
+
+.home-logo span {
+  color: var(--neon-magenta);
+}
+
+.home-search-form {
+  width: min(560px, 100%);
+  margin-bottom: 10px;
+}
+
+.home-search {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 24px;
+  border: 1px solid var(--border-glow);
+  background: var(--bg-header);
+  color: var(--text-main);
+  font-size: 14px;
+  outline: none;
+  user-select: text;
+}
+
+.home-search:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 14px rgba(125, 207, 255, 0.2);
+}
+
+.home-section {
+  width: min(720px, 100%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.home-grid {
+  width: min(720px, 100%);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.home-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px;
+  text-align: left;
+  border-radius: 8px;
+  border: 1px solid var(--border-glow);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-main);
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.home-tile:hover {
+  border-color: var(--neon-cyan);
+  transform: translateY(-2px);
+}
+
+.home-tile-icon {
+  font-size: 22px;
+}
+
+.home-tile-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.home-tile-host {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.browser-blocked {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.browser-blocked .blocked-icon {
+  font-size: 40px;
+}
+
+.browser-blocked h3 {
+  color: var(--neon-magenta);
+}
+
+.browser-blocked p {
+  max-width: 440px;
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+.browser-blocked code {
+  font-family: var(--font-mono);
+  color: var(--neon-cyan);
+}
+
+.browser-blocked .cyber-btn {
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   TOUCH & SMALL SCREENS
+   ========================================================================== */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+  .cyber-cursor-dot,
+  .cyber-cursor-ring {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .cyber-window {
+    min-width: 0;
+  }
+  .win-resizer {
+    display: none;
+  }
+  .desktop-workspace {
+    padding: 16px;
+    gap: 16px;
+  }
+  .browser-toolbar {
+    gap: 4px;
+    padding: 6px;
+  }
+  #browser-home,
+  #browser-forward {
+    display: none;
+  }
+  .browser-hint {
+    display: none;
+  }
+  .taskbar-right .theme-switcher,
+  .taskbar-right .sfx-switcher {
+    display: none;
+  }
+}

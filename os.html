@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tokyo OS — by NEONDEV</title>
+    <meta
+      name="description"
+      content="Tokyo OS — a web desktop with a real Linux terminal (v86 emulator), a tabbed browser, window manager and Web Audio synth. Built by NEONDEV."
+    />
     <link rel="stylesheet" href="theme.css" />
   </head>
   <body>
@@ -47,7 +51,7 @@
       <div
         class="cyber-window"
         id="win-terminal"
-        style="top: 80px; left: 100px; width: 620px; height: 420px"
+        style="top: 70px; left: 100px; width: 760px; height: 480px"
       >
         <div class="window-header">
           <div class="window-title">
@@ -62,19 +66,23 @@
             <button class="win-btn win-close" title="Close">✕</button>
           </div>
         </div>
-        <div class="window-body terminal-body">
-          <div class="terminal-output" id="terminal-output"></div>
-          <div class="terminal-input-row">
-            <span class="terminal-prompt" id="terminal-prompt"
-              >guest@tokyo-night:~$</span
-            >
-            <input
-              type="text"
-              id="terminal-input"
-              autocomplete="off"
-              spellcheck="false"
-              autofocus
-            />
+        <div class="window-body terminal-body linux-body">
+          <!-- xterm.js renders the VM's serial console here -->
+          <div class="linux-screen" id="linux-screen"></div>
+
+          <!-- shown until Linux is booted (and again after the window is closed) -->
+          <div class="linux-boot" id="linux-boot">
+            <div class="linux-boot-logo">&gt;_ tux@tokyo-os</div>
+            <h3 data-i18n="linux_title">ნამდვილი Linux შენს ბრაუზერში</h3>
+            <p data-i18n="linux_desc"></p>
+            <button class="cyber-btn" id="linux-boot-btn" data-i18n="linux_boot">
+              ▶ Linux-ის ჩართვა
+            </button>
+            <span class="linux-size" data-i18n="linux_size"></span>
+            <div class="linux-progress hidden" id="linux-progress">
+              <div class="linux-progress-bar"><span id="linux-progress-fill"></span></div>
+              <span class="linux-progress-text" id="linux-progress-text"></span>
+            </div>
           </div>
         </div>
         <div class="win-resizer"></div>
@@ -84,7 +92,7 @@
       <div
         class="cyber-window hidden"
         id="win-browser"
-        style="top: 100px; left: 160px; width: 680px; height: 450px"
+        style="top: 90px; left: 180px; width: 900px; height: 560px"
       >
         <div class="window-header">
           <div class="window-title">
@@ -100,53 +108,36 @@
           </div>
         </div>
         <div class="window-body browser-body">
-          <div class="browser-toolbar">
-            <button class="browser-nav-btn">&larr;</button>
-            <button class="browser-nav-btn">&rarr;</button>
+          <!-- tabs strip (filled by browser.js) -->
+          <div class="browser-tabs" id="browser-tabs">
+            <div class="browser-tab-list" id="browser-tab-list"></div>
+            <button class="browser-tab-new" id="browser-tab-new" title="New tab">+</button>
+          </div>
+          <form class="browser-toolbar" id="browser-toolbar">
+            <button type="button" class="browser-nav-btn" id="browser-back" title="Back">&larr;</button>
+            <button type="button" class="browser-nav-btn" id="browser-forward" title="Forward">&rarr;</button>
+            <button type="button" class="browser-nav-btn" id="browser-reload" title="Reload">↻</button>
+            <button type="button" class="browser-nav-btn" id="browser-home" title="Home">⌂</button>
             <div class="browser-url-bar">
-              <span class="ssl-badge">🔒 SECURE</span>
+              <span class="ssl-badge" id="browser-ssl">🔒</span>
               <input
                 type="text"
                 class="browser-input"
-                value="https://neondev.net/portfolio"
-                readonly
+                id="browser-url"
+                autocomplete="off"
+                spellcheck="false"
+                data-i18n-ph="browser_search_ph"
               />
             </div>
-            <button class="browser-nav-btn">↻</button>
+            <a class="browser-nav-btn" id="browser-external" target="_blank" rel="noopener noreferrer" title="Open in new tab">↗</a>
+          </form>
+          <div class="browser-hint hidden" id="browser-hint">
+            <span data-i18n="browser_embed_hint"></span>
+            <a id="browser-hint-link" target="_blank" rel="noopener noreferrer" data-i18n="browser_open_external"></a>
           </div>
-          <div class="browser-viewport">
-            <div class="mock-webpage">
-              <div class="mock-hero">
-                <h1 class="glitch-text">&lt;NEON<span>DEV</span>&gt;</h1>
-                <p class="mock-sub" data-i18n="browser_hero_sub">
-                  Senior Creative Frontend Engineer // Cyber Architect
-                </p>
-              </div>
-              <div class="mock-cards">
-                <div class="mock-card">
-                  <h4 data-i18n="card_1_title">ტოკიო OS</h4>
-                  <p data-i18n="card_1_desc">
-                    Vanilla JS, CSS3, Web Audio API-ზე აგებული კიბერ ოპერაციული
-                    სისტემა.
-                  </p>
-                </div>
-                <div class="mock-card">
-                  <h4 data-i18n="card_2_title">აუდიო სინთი</h4>
-                  <p data-i18n="card_2_desc">
-                    ტალღოვანი სიხშირეების გენერატორი რეალურ დროში, გარე ფაილების
-                    გარეშე.
-                  </p>
-                </div>
-                <div class="mock-card">
-                  <h4 data-i18n="card_3_title">ლოკალიზაცია</h4>
-                  <p data-i18n="card_3_desc">
-                    სრული ორენოვანი გარემო (ქართული და ინგლისური) დინამიკური
-                    გადართვით.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div class="browser-loading" id="browser-loading"></div>
+          <!-- one iframe / home page per tab -->
+          <div class="browser-viewport" id="browser-viewport"></div>
         </div>
         <div class="win-resizer"></div>
       </div>
@@ -350,5 +341,7 @@
     </footer>
 
     <script src="kernel.js"></script>
+    <script src="browser.js"></script>
+    <script src="linux.js"></script>
   </body>
 </html>
