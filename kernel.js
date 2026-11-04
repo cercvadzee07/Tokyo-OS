@@ -104,10 +104,11 @@ const I18N = {
   },
 };
 
-let currentLang = localStorage.getItem("tokyo_lang") || "GEO";
+let currentLang = localStorage.getItem("tokyo_lang") || "ENG";
 
 function applyLanguage(lang) {
   currentLang = lang;
+  document.documentElement.lang = lang === "GEO" ? "ka" : "en";
   localStorage.setItem("tokyo_lang", lang);
   const langLabel = document.getElementById("lang-label");
   if (langLabel) langLabel.textContent = lang;
