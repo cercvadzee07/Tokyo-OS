@@ -1,83 +1,172 @@
 <!doctype html>
-<html lang="en" data-theme="tokyo">
+<html lang="en" data-theme="neondev">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Tokyo OS — by NEONDEV</title>
     <meta
       name="description"
       content="Tokyo OS — a web desktop with a real Linux terminal (v86 emulator), a tabbed browser, window manager and Web Audio synth. Built by NEONDEV."
     />
-    <link rel="stylesheet" href="theme.css" />
+    <meta name="theme-color" content="#080A12" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Georgian:wght@400;500;700;900&display=swap"
+    />
+    <link rel="stylesheet" href="theme-neondev.css?v=5" />
   </head>
   <body>
-    <!-- Custom Cyber Cursor -->
+    <!-- ===== SVG sprite: brand gradient + line icons ===== -->
+    <svg class="nd-sprite" aria-hidden="true" width="0" height="0">
+      <defs>
+        <linearGradient id="ndg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="24">
+          <stop offset="0" stop-color="#7DD3FC" />
+          <stop offset=".5" stop-color="#A5B4FC" />
+          <stop offset="1" stop-color="#C4B5FD" />
+        </linearGradient>
+        <linearGradient id="ndg40" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#7DD3FC" />
+          <stop offset=".5" stop-color="#A5B4FC" />
+          <stop offset="1" stop-color="#C4B5FD" />
+        </linearGradient>
+      </defs>
+      <symbol id="i-logo" viewBox="0 0 40 40">
+        <rect x="1.5" y="1.5" width="37" height="37" rx="10" fill="#11131C" stroke="url(#ndg40)" stroke-width="1.5" />
+        <path d="M13 28V12l14 16V12" fill="none" stroke="url(#ndg40)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="31.5" cy="8.5" r="2.8" fill="#A3E635" />
+      </symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="url(#ndg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2.5" y="4" width="19" height="16" rx="3" />
+        <path d="M7 10l3 2.5L7 15M12.5 15.5H17" />
+      </symbol>
+      <symbol id="i-browser" viewBox="0 0 24 24" fill="none" stroke="url(#ndg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" />
+      </symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="url(#ndg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2.5" y="4" width="19" height="16" rx="3" />
+        <path d="M6 14h3l2-5 2.5 8 2-4H18" />
+      </symbol>
+      <symbol id="i-explorer" viewBox="0 0 24 24" fill="none" stroke="url(#ndg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.5h7.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z" />
+        <path d="M3 11h18" />
+      </symbol>
+      <symbol id="i-synth" viewBox="0 0 24 24" fill="none" stroke="url(#ndg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 4v16M12 4v16M18 4v16" />
+        <rect x="4" y="13" width="4" height="3" rx="1" />
+        <rect x="10" y="7" width="4" height="3" rx="1" />
+        <rect x="16" y="11" width="4" height="3" rx="1" />
+      </symbol>
+      <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="url(#ndg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+        <path d="M14 3v5h5M9 13h6M9 16.5h4" />
+      </symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.5h7.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z" />
+      </symbol>
+      <symbol id="i-min" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2.5 6h7" /></symbol>
+      <symbol id="i-max" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="2.5" width="7" height="7" rx="1.5" /></symbol>
+      <symbol id="i-close" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6" /></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M3.5 12h17M12 3.5c2.3 2.4 3.4 5.2 3.4 8.5s-1.1 6.1-3.4 8.5c-2.3-2.4-3.4-5.2-3.4-8.5S9.7 5.9 12 3.5z" /></symbol>
+      <symbol id="i-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" /><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11" /></symbol>
+      <symbol id="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" /><path d="M16 9.5l5 5M21 9.5l-5 5" /></symbol>
+    </svg>
+
+    <!-- Custom cursor -->
     <div id="cursor-dot" class="cyber-cursor-dot"></div>
     <div id="cursor-ring" class="cyber-cursor-ring"></div>
 
-    <!-- CRT Screen Filter -->
-    <div class="crt-overlay"></div>
+    <!-- Background: grid, glow, vignette + drifting code texture -->
+    <div class="nd-bg" aria-hidden="true">
+      <div class="nd-grid"></div>
+      <div class="nd-glow"></div>
+      <canvas id="nd-canvas"></canvas>
+      <div class="nd-vignette"></div>
+    </div>
 
-    <!-- Matrix Background Canvas -->
-    <canvas id="matrix-canvas"></canvas>
+    <!-- Boot splash -->
+    <div class="nd-splash" id="nd-splash">
+      <div class="nd-splash-inner">
+        <svg class="nd-splash-logo"><use href="#i-logo" /></svg>
+        <div class="nd-wordmark nd-wordmark-xl">NEON<span>DEV</span></div>
+        <div class="nd-splash-sub">TOKYO OS // v3.0</div>
+        <div class="nd-splash-bar"><span></span></div>
+        <div class="nd-tagline"><i class="nd-dot"></i> BUILD · SHIP · REPEAT</div>
+      </div>
+      <div class="nd-hud nd-hud-tl">NEONDEV // BOOT.SEQ</div>
+      <div class="nd-hud nd-hud-br">LOC: TBILISI // GE</div>
+    </div>
 
-    <!-- Desktop Icons Grid -->
+    <!-- HUD corner labels -->
+    <div class="nd-hud nd-hud-tr" aria-hidden="true">TOKYO.OS // v3.0 · LOC: TBILISI // GE</div>
+
+    <!-- Clock widget -->
+    <aside class="nd-widget" aria-hidden="true">
+      <div class="nd-widget-label"><i class="nd-dot"></i> NEONDEV // SYS.ONLINE</div>
+      <div class="nd-widget-time" id="nd-time">00:00</div>
+      <div class="nd-widget-date" id="nd-date">—</div>
+      <div class="nd-widget-rule"></div>
+      <div class="nd-widget-copy">Production-ready web apps &amp; MVPs.</div>
+    </aside>
+
+    <!-- Desktop icons -->
     <main class="desktop-workspace" id="desktop">
       <div class="desktop-icon" data-app="terminal">
-        <div class="icon-glyph terminal-glyph">&gt;_</div>
+        <div class="icon-glyph"><svg><use href="#i-terminal" /></svg></div>
         <span class="icon-label" data-i18n="app_terminal">ტერმინალი</span>
       </div>
       <div class="desktop-icon" data-app="browser">
-        <div class="icon-glyph browser-glyph">🌐</div>
+        <div class="icon-glyph"><svg><use href="#i-browser" /></svg></div>
         <span class="icon-label" data-i18n="app_browser">კიბერ ბრაუზერი</span>
       </div>
       <div class="desktop-icon" data-app="monitor">
-        <div class="icon-glyph monitor-glyph">📊</div>
+        <div class="icon-glyph"><svg><use href="#i-monitor" /></svg></div>
         <span class="icon-label" data-i18n="app_monitor">მონიტორი</span>
       </div>
       <div class="desktop-icon" data-app="explorer">
-        <div class="icon-glyph explorer-glyph">📁</div>
+        <div class="icon-glyph"><svg><use href="#i-explorer" /></svg></div>
         <span class="icon-label" data-i18n="app_explorer">ფაილები</span>
       </div>
       <div class="desktop-icon" data-app="synth">
-        <div class="icon-glyph synth-glyph">🎛️</div>
+        <div class="icon-glyph"><svg><use href="#i-synth" /></svg></div>
         <span class="icon-label" data-i18n="app_synth">ლო-ფაი სინთი</span>
       </div>
     </main>
 
-    <!-- Window Containers Layer -->
+    <!-- Windows -->
     <div id="window-layer">
-      <!-- Terminal Window -->
-      <div
-        class="cyber-window"
-        id="win-terminal"
-        style="top: 70px; left: 100px; width: 760px; height: 480px"
-      >
+      <!-- Terminal -->
+      <div class="cyber-window" id="win-terminal" style="top: 70px; left: 150px; width: 760px; height: 480px">
         <div class="window-header">
           <div class="window-title">
-            <span class="window-icon">&gt;_</span>
-            <span class="window-title-text" data-i18n="app_terminal"
-              >ტერმინალი</span
-            >
+            <svg class="window-icon"><use href="#i-terminal" /></svg>
+            <span class="window-title-text" data-i18n="app_terminal">ტერმინალი</span>
+            <span class="window-pid">PID 0x01</span>
           </div>
           <div class="window-controls">
-            <button class="win-btn win-min" title="Minimize">−</button>
-            <button class="win-btn win-max" title="Maximize">□</button>
-            <button class="win-btn win-close" title="Close">✕</button>
+            <button class="win-btn win-min" title="Minimize"><svg><use href="#i-min" /></svg></button>
+            <button class="win-btn win-max" title="Maximize"><svg><use href="#i-max" /></svg></button>
+            <button class="win-btn win-close" title="Close"><svg><use href="#i-close" /></svg></button>
           </div>
         </div>
         <div class="window-body terminal-body linux-body">
-          <!-- xterm.js renders the VM's serial console here -->
           <div class="linux-screen" id="linux-screen"></div>
-
-          <!-- shown until Linux is booted (and again after the window is closed) -->
           <div class="linux-boot" id="linux-boot">
-            <div class="linux-boot-logo">&gt;_ tux@tokyo-os</div>
+            <div class="linux-boot-logo">root@tokyo-os<span>:~#</span><i class="nd-caret"></i></div>
             <h3 data-i18n="linux_title">ნამდვილი Linux შენს ბრაუზერში</h3>
             <p data-i18n="linux_desc"></p>
-            <button class="cyber-btn" id="linux-boot-btn" data-i18n="linux_boot">
-              ▶ Linux-ის ჩართვა
-            </button>
+            <div class="nd-mobile-only nd-mobile-note">
+              <i class="nd-dot"></i>
+              <span>
+                <span lang="en"><b>Best on desktop.</b> Linux downloads ~12 MB and runs a full x86 emulator — it can be slow on phones.</span>
+                <span lang="ka"><b>საუკეთესოა კომპიუტერზე.</b> Linux ~12 MB-ს ჩამოტვირთავს და x86 ემულატორს უშვებს — ტელეფონზე შეიძლება ნელი იყოს.</span>
+              </span>
+            </div>
+            <button class="cyber-btn nd-cta" id="linux-boot-btn" data-i18n="linux_boot">▶ Linux-ის ჩართვა</button>
             <span class="linux-size" data-i18n="linux_size"></span>
             <div class="linux-progress hidden" id="linux-progress">
               <div class="linux-progress-bar"><span id="linux-progress-fill"></span></div>
@@ -88,27 +177,21 @@
         <div class="win-resizer"></div>
       </div>
 
-      <!-- Cyber Browser Window -->
-      <div
-        class="cyber-window hidden"
-        id="win-browser"
-        style="top: 90px; left: 180px; width: 900px; height: 560px"
-      >
+      <!-- Browser -->
+      <div class="cyber-window hidden" id="win-browser" style="top: 90px; left: 200px; width: 900px; height: 560px">
         <div class="window-header">
           <div class="window-title">
-            <span class="window-icon">🌐</span>
-            <span class="window-title-text" data-i18n="app_browser"
-              >კიბერ ბრაუზერი</span
-            >
+            <svg class="window-icon"><use href="#i-browser" /></svg>
+            <span class="window-title-text" data-i18n="app_browser">კიბერ ბრაუზერი</span>
+            <span class="window-pid">PID 0x02</span>
           </div>
           <div class="window-controls">
-            <button class="win-btn win-min">−</button>
-            <button class="win-btn win-max">□</button>
-            <button class="win-btn win-close">✕</button>
+            <button class="win-btn win-min" title="Minimize"><svg><use href="#i-min" /></svg></button>
+            <button class="win-btn win-max" title="Maximize"><svg><use href="#i-max" /></svg></button>
+            <button class="win-btn win-close" title="Close"><svg><use href="#i-close" /></svg></button>
           </div>
         </div>
         <div class="window-body browser-body">
-          <!-- tabs strip (filled by browser.js) -->
           <div class="browser-tabs" id="browser-tabs">
             <div class="browser-tab-list" id="browser-tab-list"></div>
             <button class="browser-tab-new" id="browser-tab-new" title="New tab">+</button>
@@ -120,14 +203,7 @@
             <button type="button" class="browser-nav-btn" id="browser-home" title="Home">⌂</button>
             <div class="browser-url-bar">
               <span class="ssl-badge" id="browser-ssl">🔒</span>
-              <input
-                type="text"
-                class="browser-input"
-                id="browser-url"
-                autocomplete="off"
-                spellcheck="false"
-                data-i18n-ph="browser_search_ph"
-              />
+              <input type="text" class="browser-input" id="browser-url" autocomplete="off" spellcheck="false" data-i18n-ph="browser_search_ph" />
             </div>
             <a class="browser-nav-btn" id="browser-external" target="_blank" rel="noopener noreferrer" title="Open in new tab">↗</a>
           </form>
@@ -136,29 +212,23 @@
             <a id="browser-hint-link" target="_blank" rel="noopener noreferrer" data-i18n="browser_open_external"></a>
           </div>
           <div class="browser-loading" id="browser-loading"></div>
-          <!-- one iframe / home page per tab -->
           <div class="browser-viewport" id="browser-viewport"></div>
         </div>
         <div class="win-resizer"></div>
       </div>
 
-      <!-- System Monitor Window -->
-      <div
-        class="cyber-window hidden"
-        id="win-monitor"
-        style="top: 120px; left: 220px; width: 560px; height: 420px"
-      >
+      <!-- System monitor -->
+      <div class="cyber-window hidden" id="win-monitor" style="top: 120px; left: 240px; width: 560px; height: 430px">
         <div class="window-header">
           <div class="window-title">
-            <span class="window-icon">📊</span>
-            <span class="window-title-text" data-i18n="app_monitor"
-              >მონიტორი</span
-            >
+            <svg class="window-icon"><use href="#i-monitor" /></svg>
+            <span class="window-title-text" data-i18n="app_monitor">მონიტორი</span>
+            <span class="window-pid">PID 0x03</span>
           </div>
           <div class="window-controls">
-            <button class="win-btn win-min">−</button>
-            <button class="win-btn win-max">□</button>
-            <button class="win-btn win-close">✕</button>
+            <button class="win-btn win-min" title="Minimize"><svg><use href="#i-min" /></svg></button>
+            <button class="win-btn win-max" title="Maximize"><svg><use href="#i-max" /></svg></button>
+            <button class="win-btn win-close" title="Close"><svg><use href="#i-close" /></svg></button>
           </div>
         </div>
         <div class="window-body monitor-body">
@@ -167,65 +237,46 @@
               <span data-i18n="metric_cpu">პროცესორის დატვირთვა (CPU)</span>
               <span id="cpu-val" class="metric-val">34%</span>
             </div>
-            <canvas
-              id="cpu-chart"
-              class="chart-canvas"
-              width="500"
-              height="60"
-            ></canvas>
+            <canvas id="cpu-chart" class="chart-canvas" width="500" height="60"></canvas>
           </div>
           <div class="metric-block">
             <div class="metric-info">
               <span data-i18n="metric_ram">ოპერატიული მეხსიერება (RAM)</span>
               <span id="ram-val" class="metric-val">4.2 / 16 GB</span>
             </div>
-            <canvas
-              id="ram-chart"
-              class="chart-canvas"
-              width="500"
-              height="60"
-            ></canvas>
+            <canvas id="ram-chart" class="chart-canvas" width="500" height="60"></canvas>
           </div>
           <div class="metric-block">
             <div class="metric-info">
               <span data-i18n="metric_net">ქსელური ტელემეტრია (NET)</span>
               <span id="net-val" class="metric-val">128 KB/s</span>
             </div>
-            <canvas
-              id="net-chart"
-              class="chart-canvas"
-              width="500"
-              height="60"
-            ></canvas>
+            <canvas id="net-chart" class="chart-canvas" width="500" height="60"></canvas>
           </div>
         </div>
         <div class="win-resizer"></div>
       </div>
 
-      <!-- File Explorer Window -->
-      <div
-        class="cyber-window hidden"
-        id="win-explorer"
-        style="top: 140px; left: 280px; width: 620px; height: 380px"
-      >
+      <!-- File explorer -->
+      <div class="cyber-window hidden" id="win-explorer" style="top: 140px; left: 300px; width: 640px; height: 400px">
         <div class="window-header">
           <div class="window-title">
-            <span class="window-icon">📁</span>
-            <span class="window-title-text" data-i18n="app_explorer"
-              >ფაილები</span
-            >
+            <svg class="window-icon"><use href="#i-explorer" /></svg>
+            <span class="window-title-text" data-i18n="app_explorer">ფაილები</span>
+            <span class="window-pid">PID 0x04</span>
           </div>
           <div class="window-controls">
-            <button class="win-btn win-min">−</button>
-            <button class="win-btn win-max">□</button>
-            <button class="win-btn win-close">✕</button>
+            <button class="win-btn win-min" title="Minimize"><svg><use href="#i-min" /></svg></button>
+            <button class="win-btn win-max" title="Maximize"><svg><use href="#i-max" /></svg></button>
+            <button class="win-btn win-close" title="Close"><svg><use href="#i-close" /></svg></button>
           </div>
         </div>
         <div class="window-body explorer-body">
           <div class="explorer-sidebar">
-            <div class="folder-item active">📁 /root/neon</div>
-            <div class="folder-item">📂 /system/logs</div>
-            <div class="folder-item">📂 /portfolio</div>
+            <div class="explorer-sidebar-label">LOCATIONS</div>
+            <div class="folder-item active"><svg><use href="#i-folder" /></svg> /root/neon</div>
+            <div class="folder-item"><svg><use href="#i-folder" /></svg> /system/logs</div>
+            <div class="folder-item"><svg><use href="#i-folder" /></svg> /portfolio</div>
           </div>
           <div class="explorer-main">
             <div class="file-list" id="file-list"></div>
@@ -238,30 +289,23 @@
         <div class="win-resizer"></div>
       </div>
 
-      <!-- Synth Audio App Window -->
-      <div
-        class="cyber-window hidden"
-        id="win-synth"
-        style="top: 160px; left: 340px; width: 480px; height: 360px"
-      >
+      <!-- Synth -->
+      <div class="cyber-window hidden" id="win-synth" style="top: 160px; left: 360px; width: 480px; height: 370px">
         <div class="window-header">
           <div class="window-title">
-            <span class="window-icon">🎛️</span>
-            <span class="window-title-text" data-i18n="app_synth"
-              >ლო-ფაი სინთი</span
-            >
+            <svg class="window-icon"><use href="#i-synth" /></svg>
+            <span class="window-title-text" data-i18n="app_synth">ლო-ფაი სინთი</span>
+            <span class="window-pid">PID 0x05</span>
           </div>
           <div class="window-controls">
-            <button class="win-btn win-min">−</button>
-            <button class="win-btn win-max">□</button>
-            <button class="win-btn win-close">✕</button>
+            <button class="win-btn win-min" title="Minimize"><svg><use href="#i-min" /></svg></button>
+            <button class="win-btn win-max" title="Maximize"><svg><use href="#i-max" /></svg></button>
+            <button class="win-btn win-close" title="Close"><svg><use href="#i-close" /></svg></button>
           </div>
         </div>
         <div class="window-body synth-body">
           <div class="synth-top">
-            <button id="synth-toggle" class="cyber-btn" data-i18n="synth_play">
-              ▶ ჩართვა
-            </button>
+            <button id="synth-toggle" class="cyber-btn" data-i18n="synth_play">▶ ჩართვა</button>
             <span class="chord-display" id="chord-display">CHORD: OFF</span>
           </div>
           <div class="visualizer-bars">
@@ -271,71 +315,56 @@
             <div class="eq-bar" id="bar-4"></div>
           </div>
           <div class="synth-info">
-            <p data-i18n="synth_desc">
-              პროცედურული ატმოსფერული აკორდები (Cmaj7 &bull; Am7 &bull; Dm7
-              &bull; G7) Web Audio ოსცილატორებით.
-            </p>
+            <p data-i18n="synth_desc">პროცედურული ატმოსფერული აკორდები (Cmaj7 &bull; Am7 &bull; Dm7 &bull; G7) Web Audio ოსცილატორებით.</p>
           </div>
         </div>
         <div class="win-resizer"></div>
       </div>
     </div>
 
-    <!-- Start Menu Popup -->
+    <!-- Start menu -->
     <div class="start-menu hidden" id="start-menu">
       <div class="start-menu-header">
-        <span class="neon-brand">&lt;NEON<span>DEV</span>&gt;</span>
-        <span class="os-version">v2.0.4-PROD</span>
+        <svg class="nd-logo-sm"><use href="#i-logo" /></svg>
+        <div>
+          <div class="nd-wordmark">NEON<span>DEV</span></div>
+          <span class="os-version">TOKYO OS // v3.0-PROD</span>
+        </div>
       </div>
+      <div class="start-menu-label">APPLICATIONS</div>
       <div class="start-menu-items">
-        <div class="menu-item" data-app="terminal">
-          <span>&gt;_</span> <span data-i18n="app_terminal">ტერმინალი</span>
-        </div>
-        <div class="menu-item" data-app="browser">
-          <span>🌐</span> <span data-i18n="app_browser">კიბერ ბრაუზერი</span>
-        </div>
-        <div class="menu-item" data-app="monitor">
-          <span>📊</span> <span data-i18n="app_monitor">მონიტორი</span>
-        </div>
-        <div class="menu-item" data-app="explorer">
-          <span>📁</span> <span data-i18n="app_explorer">ფაილები</span>
-        </div>
-        <div class="menu-item" data-app="synth">
-          <span>🎛️</span> <span data-i18n="app_synth">ლო-ფაი სინთი</span>
-        </div>
+        <div class="menu-item" data-app="terminal"><svg><use href="#i-terminal" /></svg> <span data-i18n="app_terminal">ტერმინალი</span></div>
+        <div class="menu-item" data-app="browser"><svg><use href="#i-browser" /></svg> <span data-i18n="app_browser">კიბერ ბრაუზერი</span></div>
+        <div class="menu-item" data-app="monitor"><svg><use href="#i-monitor" /></svg> <span data-i18n="app_monitor">მონიტორი</span></div>
+        <div class="menu-item" data-app="explorer"><svg><use href="#i-explorer" /></svg> <span data-i18n="app_explorer">ფაილები</span></div>
+        <div class="menu-item" data-app="synth"><svg><use href="#i-synth" /></svg> <span data-i18n="app_synth">ლო-ფაი სინთი</span></div>
+      </div>
+      <div class="start-menu-footer">
+        <div class="nd-tagline"><i class="nd-dot"></i> BUILD · SHIP · REPEAT</div>
+        <a href="mailto:neondev.code@gmail.com">neondev.code@gmail.com</a>
       </div>
     </div>
 
-    <!-- Cyber Taskbar HUD -->
+    <!-- Taskbar -->
     <footer class="cyber-taskbar">
       <div class="taskbar-left">
-        <button class="start-btn" id="start-btn">
-          <span class="neon-brand">&lt;NEON<span>DEV</span>&gt;</span>
+        <button class="start-btn" id="start-btn" title="Start">
+          <svg class="nd-logo-sm"><use href="#i-logo" /></svg>
+          <span class="nd-wordmark">NEON<span>DEV</span></span>
         </button>
         <div class="taskbar-running-apps" id="running-apps"></div>
       </div>
 
       <div class="taskbar-right">
-        <!-- Theme Switcher HUD -->
-        <div class="hud-item theme-switcher">
-          <button class="hud-btn" id="theme-btn" title="Toggle Neon Theme">
-            🎨 <span id="theme-name">TOKYO</span>
-          </button>
-        </div>
-
-        <!-- Bilingual Toggle -->
+        <div class="hud-item nd-status"><i class="nd-dot"></i> SYS.ONLINE</div>
         <div class="hud-item lang-switcher">
           <button class="hud-btn" id="lang-btn" title="Switch Language">
-            🌐 <span id="lang-label">ENG</span>
+            <svg><use href="#i-globe" /></svg> <span id="lang-label">ENG</span>
           </button>
         </div>
-
-        <!-- Audio Mute Switch -->
         <div class="hud-item sfx-switcher">
-          <button class="hud-btn" id="sfx-btn" title="SFX Toggle">🔊</button>
+          <button class="hud-btn" id="sfx-btn" title="SFX Toggle"><svg><use href="#i-sound" /></svg></button>
         </div>
-
-        <!-- Digital Real-Time Clock -->
         <div class="hud-item clock-display" id="hud-clock">00:00:00</div>
       </div>
     </footer>
@@ -343,5 +372,6 @@
     <script src="kernel.js"></script>
     <script src="browser.js"></script>
     <script src="linux.js"></script>
+    <script src="neondev.js?v=5"></script>
   </body>
 </html>

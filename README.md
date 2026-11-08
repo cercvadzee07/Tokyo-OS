@@ -13,14 +13,17 @@ A cyberpunk desktop environment that runs in the browser. Live: https://cercvadz
   (Google, GitHub…). Shortcuts: Ctrl+T, Ctrl+W, Ctrl+L.
 - **Window manager** — drag, resize, minimize (stays in the taskbar), maximize (double-click the title bar),
   focus/z-order, Start menu; mouse and touch; full-screen windows on phones.
-- System monitor, file explorer, procedural Web Audio lo-fi synth, 3 themes, Georgian / English.
+- System monitor, file explorer, procedural Web Audio lo-fi synth, Georgian / English.
+- **NEONDEV design** — dark navy glass UI with the brand gradient, boot splash and clock widget.
+- **Mobile layout** — phone home screen, full-screen apps and a bottom dock (Linux shows a "best on desktop" note on phones).
 
 ## Files
 
 | File | What |
 |---|---|
 | `os.html` | desktop + window markup |
-| `theme.css` | themes and all styles |
+| `theme-neondev.css` | NEONDEV design system + mobile layout |
+| `neondev.js` | brand layer: background, clock widget, splash, icons, xterm colours, mobile behaviour |
 | `kernel.js` | i18n, audio, matrix rain, window manager, monitor/explorer/synth apps |
 | `browser.js` | the tabbed browser |
 | `linux.js` | v86 + xterm.js terminal |
